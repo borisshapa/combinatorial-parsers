@@ -1,0 +1,7 @@
+/out/
+/.idea/
+/Linear.iml
+/trash/functional
+/trash/
+/src/expression.clj
+/src/parserLibrary.clj
