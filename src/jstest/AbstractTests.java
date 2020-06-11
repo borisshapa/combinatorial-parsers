@@ -21,6 +21,7 @@ public abstract class AbstractTests implements Cloneable {
     private final Map<String, TExpr> nullary = new HashMap<>();
     private final List<AbstractExpression> variables = new ArrayList<>();
 
+    private final Map<String, Integer> variableNames = new HashMap<>();
     private final List<String> operatorNames = new ArrayList<>();
     private final List<String> nullaryNames = new ArrayList<>();
 
@@ -45,7 +46,7 @@ public abstract class AbstractTests implements Cloneable {
     }
 
     protected AbstractExpression generateOp(final Random random, final int depth) {
-        if (random.nextInt(6) == 0) {
+        if (random.nextInt(6) == 0 || operatorNames.isEmpty()) {
             return generateP(random, depth);
         } else {
             final String name = operatorNames.get(random.nextInt(operatorNames.size()));
@@ -69,7 +70,7 @@ public abstract class AbstractTests implements Cloneable {
 
     protected void any(final String name, final int arity, final Function<List<Double>, Double> f) {
         operatorNames.add(name);
-        operators.put(name, new Operator<Double>() {
+        operators.put(name, new Operator<>() {
             @Override
             public Double apply(final List<Double> args) {
                 return f.apply(args);
@@ -124,6 +125,7 @@ public abstract class AbstractTests implements Cloneable {
     protected AbstractExpression variable(final String name, final int index) {
         final AbstractExpression variable = (parsed, unparsed) -> expr(parsed.variable(name), unparsed.variable(name), vars -> vars[index]);
         variables.add(variable);
+        variableNames.put(name, index);
         return variable;
     }
 
@@ -137,5 +139,9 @@ public abstract class AbstractTests implements Cloneable {
 
     public List<AbstractExpression> getVariables() {
         return variables;
+    }
+
+    public Map<String, Integer> getVariableNames() {
+        return variableNames;
     }
 }
